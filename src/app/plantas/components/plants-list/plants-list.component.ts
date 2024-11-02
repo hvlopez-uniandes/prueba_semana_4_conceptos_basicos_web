@@ -13,7 +13,7 @@ export class PlantListComponent implements OnInit {
   plantas: Planta[] = [];
   filteredPlantas: Planta[] = [];
   searchText: string = '';
-  sortDirection: boolean = true; // true for ascending, false for descending
+  sortDirection: boolean = true;
   page: number = 1;
 
   constructor(private plantasService: PlantsService) {}

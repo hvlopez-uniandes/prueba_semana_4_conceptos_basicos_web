@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
-
-
+import { PlantListComponent } from './plantas/components/plants-list/plants-list.component';
 
 const routes: Routes = [
-  { path: '', component: AppComponent },  // La página principal muestra el listado de películas
+  { path: '', component: PlantListComponent },  // La página principal muestra el listado de películas
 ];
 
 @NgModule({
