@@ -1,49 +1,41 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { PlantasService } from '../../plantas.service';
 import { Planta } from '../../../domain/modelos/plantas';
-import { PlantsService } from '../../plantas.service';
-
 
 @Component({
   selector: 'app-plants-list',
   templateUrl: './plants-list.component.html',
   styleUrls: ['./plants.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlantListComponent implements OnInit {
   plantas: Planta[] = [];
-  filteredPlantas: Planta[] = [];
   searchText: string = '';
-  sortDirection: boolean = true;
   page: number = 1;
 
-  constructor(private plantasService: PlantsService) {}
+  totalPlantasInterior: number = 0;
+  totalPlantasExterior: number = 0;
+
+  constructor(private readonly plantasService: PlantasService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.plantasService.getData().subscribe(
-      (data) => {
-        this.plantas = data;
-        this.filteredPlantas = data;
+    this.obtenerPlantas();
+  }
+
+  obtenerPlantas(): void {
+    this.plantasService.getData().subscribe({
+      next: (data) => {
+        this.plantas = data.map(Planta.fromApi);
+        this.calculateTotals();
+        this.cdr.detectChanges(); // Forzar la detección de cambios
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener las plantas:', error);
       }
-    );
-  }
-
-  filterPlantas(): void {
-    this.filteredPlantas = this.plantas.filter(planta =>
-      planta.nombre_comun.toLowerCase().includes(this.searchText.toLowerCase())
-    );
-  }
-
-  toggleSortDirection(): void {
-    this.sortDirection = !this.sortDirection;
-    this.filteredPlantas.sort((a, b) => {
-      if (this.sortDirection) {
-        return a.nombre_comun.localeCompare(b.nombre_comun);
-      } else {
-        return b.nombre_comun.localeCompare(a.nombre_comun);
-      }
     });
+  }
+
+  calculateTotals(): void {
+    this.totalPlantasInterior = this.plantas.filter(planta => planta.tipo === 'Interior').length;
+    this.totalPlantasExterior = this.plantas.filter(planta => planta.tipo === 'Exterior').length;
   }
 }

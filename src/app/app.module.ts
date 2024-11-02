@@ -5,8 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { PlantsModule } from './plantas/plantas.module';
+import { AppComponent } from './app.component';
 
 @NgModule({
+  declarations: [
+    AppComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -17,5 +21,7 @@ import { PlantsModule } from './plantas/plantas.module';
   ],
   providers: [
   ],
+  bootstrap: [AppComponent] // Este debe ser tu componente raíz
+
 })
 export class AppModule {}
